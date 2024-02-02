@@ -23,7 +23,6 @@ table_create_actors = """
     CREATE TABLE IF NOT EXISTS actors (
         id bigint,
         login text,
-        url text,
         PRIMARY KEY(id)
     )
 """
@@ -151,6 +150,7 @@ table_create_events = """
         repo_id bigint,
         public text,
         created_at timestamp,
+        payload text,
         org_id bigint,
         PRIMARY KEY(id),
         CONSTRAINT fk_actor FOREIGN KEY(actor_id) REFERENCES actors(id),
