@@ -13,11 +13,12 @@ table_drop_repo = "DROP TABLE IF EXISTS repo"
 table_drop_org = "DROP TABLE IF EXISTS org"
 table_drop_creator = "DROP TABLE IF EXISTS creator CASCADE"
 table_drop_reaction = "DROP TABLE IF EXISTS reaction"
-table_drop_comment = "DROP TABLE IF EXISTS comment"
-table_drop_milestone = "DROP TABLE IF EXISTS milestone"
-table_drop_labels = "DROP TABLE IF EXISTS labels"
+table_drop_comment = "DROP TABLE IF EXISTS comment CASCADE"
+table_drop_milestone = "DROP TABLE IF EXISTS milestone CASCADE"
 table_drop_payload = "DROP TABLE IF EXISTS payload CASCADE"
-table_drop_issue = "DROP TABLE IF EXISTS issue"
+table_drop_issue = "DROP TABLE IF EXISTS issue CASCADE"
+table_drop_author = "DROP TABLE IF EXISTS author CASCADE"
+table_drop_release = "DROP TABLE IF EXISTS release CASCADE"
 
 table_create_actors = """
     CREATE TABLE IF NOT EXISTS actors (
@@ -30,7 +31,6 @@ table_create_repo = """
     CREATE TABLE IF NOT EXISTS repo (
         id bigint,
         name text,
-        url text,
         PRIMARY KEY(id)
     )
 """
@@ -38,7 +38,6 @@ table_create_org = """
     CREATE TABLE IF NOT EXISTS org (
         id bigint,
         login text,
-        url text,
         PRIMARY KEY(id)
     )
 """
@@ -48,7 +47,6 @@ table_create_creator = """
         id bigint,
         login text,
         url text,
-        node_id bigint,
         type text,
         site_admin text,
         PRIMARY KEY(id)
@@ -60,20 +58,29 @@ table_create_users = """
         id bigint,
         login text,
         url text,
-        node_id bigint,
         type text,
         site_admin text,
         PRIMARY KEY(id)
     )
 """
-
-table_create_labels = """
-    CREATE TABLE IF NOT EXISTS labels (
+table_create_author = """
+    CREATE TABLE IF NOT EXISTS author (
+        id bigint,
+        login text,
+        type text,
+        PRIMARY KEY(id)
+    )
+"""
+table_create_release = """
+    CREATE TABLE IF NOT EXISTS release (
         id bigint,
         url text,
-        node_id bigint,
+        author_id bigint,
         name text,
-        PRIMARY KEY(id)
+        created_at text,
+        published_at text,
+        PRIMARY KEY(id),
+        CONSTRAINT fk_author_release FOREIGN KEY(author_id) REFERENCES author(id)
     )
 """
 
@@ -81,35 +88,52 @@ table_create_comment = """
     CREATE TABLE IF NOT EXISTS comment (
         id bigint,
         url text,
-        node_id bigint,
         users_id bigint,
         PRIMARY KEY(id),
         CONSTRAINT fk_users_comment FOREIGN KEY(users_id) REFERENCES users(id)
     )
 """
 
+table_create_milestone = """
+    CREATE TABLE IF NOT EXISTS milestone (
+        id bigint,
+        url text,
+        number int,
+        title text,
+        creator_id bigint,
+        open_issues text,
+        close_issues text, 
+        state text,
+        created_at text,
+        update_at text,
+        close_at text,
+        PRIMARY KEY(id),
+        CONSTRAINT fk_creator FOREIGN KEY(creator_id) REFERENCES creator(id)
+    )
+"""
+
 table_create_issue = """
     CREATE TABLE IF NOT EXISTS issue (
         id bigint,
-        url text UNIQUE,
-        node_id bigint,
         number int,
         title text,
         users_id bigint,
         comments int,
-        created_at timestamp,
-        updated_at timestamp,
-        close_at timestamp,
+        created_at text,
+        updated_at text,
+        close_at text,
         state text,
         locked text,
+        milestone_id bigint,
         PRIMARY KEY(id),
-        CONSTRAINT fk_users_issue FOREIGN KEY(users_id) REFERENCES users(id)
+        CONSTRAINT fk_users_issue FOREIGN KEY(users_id) REFERENCES users(id),
+        CONSTRAINT fk_milestone_issue FOREIGN KEY(milestone_id) REFERENCES milestone(id)
     )
 """
 
 table_create_reaction = """
     CREATE TABLE IF NOT EXISTS reaction (
-        issueurl text,
+        issue_id bigint,
         total_count int,
         "+1" int,
         "-1" int,
@@ -119,26 +143,7 @@ table_create_reaction = """
         heart int,
         rocket int,
         eyes int,
-        CONSTRAINT fk_issueurl FOREIGN KEY(issueurl) REFERENCES issue(url)
-    )
-"""
-
-table_create_milestone = """
-    CREATE TABLE IF NOT EXISTS milestone (
-        id bigint,
-        url text,
-        node_id bigint,
-        number int,
-        title text,
-        creator_id bigint,
-        open_issues text,
-        close_issues text, 
-        state text,
-        created_at timestamp,
-        update_at timestamp,
-        close_at timestamp,
-        PRIMARY KEY(id),
-        CONSTRAINT fk_creator FOREIGN KEY(creator_id) REFERENCES creator(id)
+        CONSTRAINT fk_issuereac FOREIGN KEY(issue_id) REFERENCES issue(id)
     )
 """
 
@@ -149,13 +154,14 @@ table_create_events = """
         actor_id bigint,
         repo_id bigint,
         public text,
-        created_at timestamp,
-        payload text,
+        created_at text,
+        payload bigint,
         org_id bigint,
         PRIMARY KEY(id),
         CONSTRAINT fk_actor FOREIGN KEY(actor_id) REFERENCES actors(id),
         CONSTRAINT fk_repo FOREIGN KEY(repo_id) REFERENCES repo(id),
-        CONSTRAINT fk_org FOREIGN KEY(org_id) REFERENCES org(id)
+        CONSTRAINT fk_org FOREIGN KEY(org_id) REFERENCES org(id),
+        CONSTRAINT fk_payload FOREIGN KEY(payload) REFERENCES issue(id)
     )
 """
 
@@ -172,8 +178,12 @@ table_create_payload = """
         ref_type text,
         master_branch text,
         pusher_type text,
+        commit_url text,
+        release_id bigint,
         CONSTRAINT fk_events FOREIGN KEY(events_id) REFERENCES events(id),
-        CONSTRAINT fk_issue FOREIGN KEY(issue_id) REFERENCES issue(id)
+        CONSTRAINT fk_issue FOREIGN KEY(issue_id) REFERENCES issue(id),
+        CONSTRAINT fk_comment FOREIGN KEY(comment) REFERENCES comment(id),
+        CONSTRAINT fk_release FOREIGN KEY(release_id) REFERENCES release(id)
     )
 """
 
@@ -183,11 +193,12 @@ create_table_queries = [
     table_create_org,
     table_create_creator,
     table_create_users,
-    table_create_issue,
-    table_create_reaction,
+    table_create_author,
+    table_create_release,
     table_create_comment,
     table_create_milestone,
-    table_create_labels,
+    table_create_issue,
+    table_create_reaction,
     table_create_events,
     table_create_payload,
 ]
@@ -200,10 +211,11 @@ drop_table_queries = [
     table_drop_reaction,
     table_drop_comment,
     table_drop_milestone,
-    table_drop_labels,
     table_drop_payload,
     table_drop_users,
     table_drop_issue,
+    table_drop_author,
+    table_drop_release,
 ]
 
 

@@ -32,40 +32,178 @@ def process(cur, conn, filepath):
             data = json.loads(f.read())
             for each in data:
                 # Print some sample data
-                
                 if each["type"] == "IssueCommentEvent":
                     print(
-                        each["id"], 
+                        each["id"],
                         each["type"],
                         each["actor"]["id"],
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["created_at"],
+                        each["org"]["id"],
+                        each["org"]["login"],
+                        each["payload"]["action"],
                         each["payload"]["issue"]["url"],
+                        each["payload"]["comment"]["id"],
+                        each["public"],
+                        each["created_at"],
+                    )
+
+                elif each["type"] == "PushEvent":
+                    print(
+                        each["id"],
+                        each["type"],
+                        each["actor"]["id"],
+                        each["actor"]["login"],
+                        each["repo"]["id"],
+                        each["repo"]["name"],
+                        each["org"]["id"],
+                        each["org"]["login"],
+                        #each["payload"]["push_id"],
+                        each["payload"]["commits"]["url"],
+                        each["public"],
+                        each["created_at"],
+                    )
+                elif each["type"] == "IssuesEvent":
+                    print(
+                        each["id"],
+                        each["type"],
+                        each["actor"]["id"],
+                        each["actor"]["login"],
+                        each["repo"]["id"],
+                        each["repo"]["name"],
+                        each["payload"]["action"],
+                        each["payload"]["issue"]["id"],
+                        each["payload"]["issue"]["url"],
+                        each["public"],
+                        each["created_at"],
+                    )
+                elif each["type"] == "ReleaseEvent":
+                    print(
+                        each["id"],
+                        each["type"],
+                        each["actor"]["id"],
+                        each["actor"]["login"],
+                        each["repo"]["id"],
+                        each["repo"]["name"],
+                        each["payload"]["action"],
+                        #each["payload"]["release"]["id"],
+                        each["public"],
+                        each["created_at"],
+                    )
+                elif each["type"] == "DeleteEvent":
+                    print(
+                        each["id"],
+                        each["type"],
+                        each["actor"]["id"],
+                        each["actor"]["login"],
+                        each["repo"]["id"],
+                        each["repo"]["name"],
+                        each["payload"]["ref"],
+                        each["payload"]["ref_type"],
+                        each["payload"]["pusher_type"],
+                        each["public"],
+                        each["created_at"],
+                        each["org"]["id"],
+                        each["org"]["login"],
+                    )
+                elif each["type"] == "CreateEvent":
+                    print(
+                        each["id"],
+                        each["type"],
+                        each["actor"]["id"],
+                        each["actor"]["login"],
+                        each["repo"]["id"],
+                        each["repo"]["name"],
+                        each["payload"]["ref"],
+                        each["payload"]["ref_type"],
+                        each["payload"]["pusher_type"],
+                        each["public"],
+                        each["created_at"],
                     )
                 else:
                     print(
-                        each["id"], 
+                        each["id"],
                         each["type"],
                         each["actor"]["id"],
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["created_at"],
+                        each["org"]["id"],
+                        each["org"]["login"],
+                        each["payload"]["action"],
+                        each["payload"]["issue"]["id"],
                         each["payload"]["issue"]["url"],
+                        each["payload"]["comment"]["id"],
+                        #each["payload"]["push_id"],
+                        each["payload"]["ref"],
+                        each["payload"]["ref_type"],
+                        each["payload"]["pusher_type"],
+                        each["payload"]["commits"]["url"],
+                        #each["payload"]["release"]["id"],
+                        each["public"],
+                        each["created_at"],
                     )
 
                 # Insert data into tables here
                 insert_statement = f"""
                     INSERT INTO actors (
                         id,
-                        login,
-                        url
-                    ) VALUES ({each["actor"]["id"]}, '{each["actor"]["login"]}')
+                        login
+                    ) VALUES ('{each["actor"]["id"]}', '{each["actor"]["login"]}')
                     ON CONFLICT (id) DO NOTHING
                 """
-                # print(insert_statement)
+                cur.execute(insert_statement)
+
+                # Insert data into tables here
+                insert_statement = f"""
+                    INSERT INTO repo (
+                        id,
+                        name
+                    ) VALUES ('{each["repo"]["id"]}', '{each["repo"]["name"]}')
+                    ON CONFLICT (id) DO NOTHING
+                """
+                cur.execute(insert_statement)
+
+                # Insert data into tables here
+                insert_statement = f"""
+                    INSERT INTO org (
+                        id,
+                        login
+                    ) VALUES ('{each["org"]["id"]}', '{each["org"]["login"]}')
+                    ON CONFLICT (id) DO NOTHING
+                """
+                cur.execute(insert_statement)
+
+                insert_statement_issue = f"""
+                    INSERT INTO issue (
+                        id,	
+                        url
+                    ) VALUES ('{each["payload"]["issue"]["id"]}','{each["payload"]["issue"]["url"]}')
+                    ON CONFLICT (id) DO NOTHING
+                """
+                cur.execute(insert_statement)
+
+                # Insert data into tables here
+                insert_statement = f"""
+                    INSERT INTO payload (
+                        action,
+                        issue_id,
+                        comment,
+                        commit_url,
+                        ref,
+                        ref_type,
+                        pusher_type
+                    ) VALUES (
+                        '{each["payload"]["action"]}',
+                        '{each["payload"]["issue"]["id"]}',
+                        '{each["payload"]["comment"]["id"]}',
+                        '{each["payload"].get("commits", {}).get("url", "")}',
+                        '{each["payload"].get("ref", "")}',
+                        '{each["payload"].get("ref_type", "")}',
+                        '{each["payload"].get("pusher_type", "")}'
+                    )
+                """
                 cur.execute(insert_statement)
 
                 # Insert data into tables here
@@ -75,17 +213,18 @@ def process(cur, conn, filepath):
                         type,
                         actor_id,
                         repo_id,
+                        payload,
                         public,
                         created_at,
                         org_id
-                    ) VALUES ('{each["id"]}', '{each["type"]}', '{each["actor"]["id"]},'{each["repo"]["id"]},'{each["payload"]["issue"]["url"]}')
+                    ) VALUES ('{each["id"]}', '{each["type"]}', '{each["actor"]["id"]}', '{each["repo"]["id"]}', '{each["payload"]["issue"]["url"]}', '{each["public"]}', '{each["created_at"]}', '{each["org"]["id"]}')
                     ON CONFLICT (id) DO NOTHING
                 """
-                # print(insert_statement)
                 cur.execute(insert_statement)
 
-                conn.commit()
+               
 
+    conn.commit()
 
 def main():
     conn = psycopg2.connect(
@@ -99,4 +238,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main() 
