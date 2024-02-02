@@ -6,7 +6,7 @@ import psycopg2
 PostgresCursor = NewType("PostgresCursor", psycopg2.extensions.cursor)
 PostgresConn = NewType("PostgresConn", psycopg2.extensions.connection)
 
-table_drop_account = "DROP TABLE IF EXISTS account CASCADE"
+table_drop_users = "DROP TABLE IF EXISTS users CASCADE"
 table_drop_events = "DROP TABLE IF EXISTS events CASCADE"
 table_drop_actors = "DROP TABLE IF EXISTS actors"
 table_drop_repo = "DROP TABLE IF EXISTS repo"
@@ -56,8 +56,8 @@ table_create_creator = """
     )
 """
 
-table_create_account = """
-    CREATE TABLE IF NOT EXISTS account (
+table_create_users = """
+    CREATE TABLE IF NOT EXISTS users (
         id bigint,
         login text,
         url text,
@@ -83,9 +83,9 @@ table_create_comment = """
         id bigint,
         url text,
         node_id bigint,
-        account_id bigint,
+        users_id bigint,
         PRIMARY KEY(id),
-        CONSTRAINT fk_account FOREIGN KEY(account_id) REFERENCES account(id)
+        CONSTRAINT fk_users_comment FOREIGN KEY(users_id) REFERENCES users(id)
     )
 """
 
@@ -96,7 +96,7 @@ table_create_issue = """
         node_id bigint,
         number int,
         title text,
-        is_account_id bigint,
+        users_id bigint,
         comments int,
         created_at timestamp,
         updated_at timestamp,
@@ -104,7 +104,7 @@ table_create_issue = """
         state text,
         locked text,
         PRIMARY KEY(id),
-        CONSTRAINT fk_issue_account FOREIGN KEY(is_account_id) REFERENCES account(id)
+        CONSTRAINT fk_users_issue FOREIGN KEY(users_id) REFERENCES users(id)
     )
 """
 
@@ -182,7 +182,7 @@ create_table_queries = [
     table_create_repo,
     table_create_org,
     table_create_creator,
-    table_create_account,
+    table_create_users,
     table_create_issue,
     table_create_reaction,
     table_create_comment,
@@ -202,7 +202,7 @@ drop_table_queries = [
     table_drop_milestone,
     table_drop_labels,
     table_drop_payload,
-    table_drop_account,
+    table_drop_users,
     table_drop_issue,
 ]
 
