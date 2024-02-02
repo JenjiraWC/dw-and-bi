@@ -55,6 +55,7 @@ table_create_creator = """
         PRIMARY KEY(id)
     )
 """
+
 table_create_account = """
     CREATE TABLE IF NOT EXISTS account (
         id int,
@@ -66,6 +67,7 @@ table_create_account = """
         PRIMARY KEY(id)
     )
 """
+
 table_create_labels = """
     CREATE TABLE IF NOT EXISTS labels (
         id int,
@@ -75,6 +77,7 @@ table_create_labels = """
         PRIMARY KEY(id)
     )
 """
+
 table_create_comment = """
     CREATE TABLE IF NOT EXISTS comment (
         id int,
@@ -85,6 +88,7 @@ table_create_comment = """
         CONSTRAINT fk_account FOREIGN KEY(account_id) REFERENCES account(id)
     )
 """
+
 table_create_issue = """
     CREATE TABLE IF NOT EXISTS issue (
         id int,
@@ -103,6 +107,7 @@ table_create_issue = """
         CONSTRAINT fk_issue_account FOREIGN KEY(is_account_id) REFERENCES account(id)
     )
 """
+
 table_create_reaction = """
     CREATE TABLE IF NOT EXISTS reaction (
         issueurl text,
@@ -153,6 +158,7 @@ table_create_events = """
         CONSTRAINT fk_org FOREIGN KEY(org_id) REFERENCES org(id)
     )
 """
+
 table_create_payload = """
     CREATE TABLE IF NOT EXISTS payload (
         events_id int,
