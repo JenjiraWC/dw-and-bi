@@ -7,7 +7,7 @@ PostgresCursor = NewType("PostgresCursor", psycopg2.extensions.cursor)
 PostgresConn = NewType("PostgresConn", psycopg2.extensions.connection)
 
 table_drop_account = "DROP TABLE IF EXISTS account CASCADE"
-table_drop_events = "DROP TABLE IF EXISTS events"
+table_drop_events = "DROP TABLE IF EXISTS events CASCADE"
 table_drop_actors = "DROP TABLE IF EXISTS actors"
 table_drop_repo = "DROP TABLE IF EXISTS repo"
 table_drop_org = "DROP TABLE IF EXISTS org"
@@ -16,12 +16,12 @@ table_drop_reaction = "DROP TABLE IF EXISTS reaction"
 table_drop_comment = "DROP TABLE IF EXISTS comment"
 table_drop_milestone = "DROP TABLE IF EXISTS milestone"
 table_drop_labels = "DROP TABLE IF EXISTS labels"
-table_drop_payload = "DROP TABLE IF EXISTS payload"
+table_drop_payload = "DROP TABLE IF EXISTS payload CASCADE"
 table_drop_issue = "DROP TABLE IF EXISTS issue"
 
 table_create_actors = """
     CREATE TABLE IF NOT EXISTS actors (
-        id int,
+        id bigint,
         login text,
         url text,
         PRIMARY KEY(id)
@@ -29,7 +29,7 @@ table_create_actors = """
 """
 table_create_repo = """
     CREATE TABLE IF NOT EXISTS repo (
-        id int,
+        id bigint,
         name text,
         url text,
         PRIMARY KEY(id)
@@ -37,7 +37,7 @@ table_create_repo = """
 """
 table_create_org = """
     CREATE TABLE IF NOT EXISTS org (
-        id int,
+        id bigint,
         login text,
         url text,
         PRIMARY KEY(id)
@@ -46,10 +46,10 @@ table_create_org = """
 
 table_create_creator = """
     CREATE TABLE IF NOT EXISTS creator (
-        id int,
+        id bigint,
         login text,
         url text,
-        node_id int,
+        node_id bigint,
         type text,
         site_admin text,
         PRIMARY KEY(id)
@@ -58,10 +58,10 @@ table_create_creator = """
 
 table_create_account = """
     CREATE TABLE IF NOT EXISTS account (
-        id int,
+        id bigint,
         login text,
         url text,
-        node_id int,
+        node_id bigint,
         type text,
         site_admin text,
         PRIMARY KEY(id)
@@ -70,9 +70,9 @@ table_create_account = """
 
 table_create_labels = """
     CREATE TABLE IF NOT EXISTS labels (
-        id int,
+        id bigint,
         url text,
-        node_id int,
+        node_id bigint,
         name text,
         PRIMARY KEY(id)
     )
@@ -80,10 +80,10 @@ table_create_labels = """
 
 table_create_comment = """
     CREATE TABLE IF NOT EXISTS comment (
-        id int,
+        id bigint,
         url text,
-        node_id int,
-        account_id int,
+        node_id bigint,
+        account_id bigint,
         PRIMARY KEY(id),
         CONSTRAINT fk_account FOREIGN KEY(account_id) REFERENCES account(id)
     )
@@ -91,12 +91,12 @@ table_create_comment = """
 
 table_create_issue = """
     CREATE TABLE IF NOT EXISTS issue (
-        id int,
+        id bigint,
         url text UNIQUE,
-        node_id int,
+        node_id bigint,
         number int,
         title text,
-        is_account_id int,
+        is_account_id bigint,
         comments int,
         created_at timestamp,
         updated_at timestamp,
@@ -126,12 +126,12 @@ table_create_reaction = """
 
 table_create_milestone = """
     CREATE TABLE IF NOT EXISTS milestone (
-        id int,
+        id bigint,
         url text,
-        node_id int,
+        node_id bigint,
         number int,
         title text,
-        creator_id int,
+        creator_id bigint,
         open_issues text,
         close_issues text, 
         state text,
@@ -145,13 +145,13 @@ table_create_milestone = """
 
 table_create_events = """
     CREATE TABLE IF NOT EXISTS events (
-        id int,
+        id bigint,
         type text,
-        actor_id int,
-        repo_id int,
+        actor_id bigint,
+        repo_id bigint,
         public text,
         created_at timestamp,
-        org_id int,
+        org_id bigint,
         PRIMARY KEY(id),
         CONSTRAINT fk_actor FOREIGN KEY(actor_id) REFERENCES actors(id),
         CONSTRAINT fk_repo FOREIGN KEY(repo_id) REFERENCES repo(id),
@@ -161,10 +161,10 @@ table_create_events = """
 
 table_create_payload = """
     CREATE TABLE IF NOT EXISTS payload (
-        events_id int,
+        events_id bigint,
         action text,
-        issue_id int,
-        push_id int,
+        issue_id bigint,
+        push_id bigint,
         size int,
         distinct_size int,
         comment int,
