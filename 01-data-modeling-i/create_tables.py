@@ -19,8 +19,6 @@ table_drop_labels = "DROP TABLE IF EXISTS labels"
 table_drop_payload = "DROP TABLE IF EXISTS payload"
 table_drop_issue = "DROP TABLE IF EXISTS issue"
 
-
-
 table_create_actors = """
     CREATE TABLE IF NOT EXISTS actors (
         id int,
