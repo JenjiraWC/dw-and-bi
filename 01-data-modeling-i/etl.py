@@ -40,11 +40,6 @@ def process(cur, conn, filepath):
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["org"]["id"],
-                        each["org"]["login"],
-                        each["payload"]["action"],
-                        each["payload"]["issue"]["url"],
-                        each["payload"]["comment"]["id"],
                         each["public"],
                         each["created_at"],
                     )
@@ -57,10 +52,6 @@ def process(cur, conn, filepath):
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["org"]["id"],
-                        each["org"]["login"],
-                        #each["payload"]["push_id"],
-                        each["payload"]["commits"]["url"],
                         each["public"],
                         each["created_at"],
                     )
@@ -72,9 +63,6 @@ def process(cur, conn, filepath):
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["payload"]["action"],
-                        each["payload"]["issue"]["id"],
-                        each["payload"]["issue"]["url"],
                         each["public"],
                         each["created_at"],
                     )
@@ -86,8 +74,6 @@ def process(cur, conn, filepath):
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["payload"]["action"],
-                        #each["payload"]["release"]["id"],
                         each["public"],
                         each["created_at"],
                     )
@@ -99,13 +85,8 @@ def process(cur, conn, filepath):
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["payload"]["ref"],
-                        each["payload"]["ref_type"],
-                        each["payload"]["pusher_type"],
                         each["public"],
-                        each["created_at"],
-                        each["org"]["id"],
-                        each["org"]["login"],
+                        each["created_at"]
                     )
                 elif each["type"] == "CreateEvent":
                     print(
@@ -115,9 +96,6 @@ def process(cur, conn, filepath):
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["payload"]["ref"],
-                        each["payload"]["ref_type"],
-                        each["payload"]["pusher_type"],
                         each["public"],
                         each["created_at"],
                     )
@@ -129,18 +107,6 @@ def process(cur, conn, filepath):
                         each["actor"]["login"],
                         each["repo"]["id"],
                         each["repo"]["name"],
-                        each["org"]["id"],
-                        each["org"]["login"],
-                        each["payload"]["action"],
-                        each["payload"]["issue"]["id"],
-                        each["payload"]["issue"]["url"],
-                        each["payload"]["comment"]["id"],
-                        #each["payload"]["push_id"],
-                        each["payload"]["ref"],
-                        each["payload"]["ref_type"],
-                        each["payload"]["pusher_type"],
-                        each["payload"]["commits"]["url"],
-                        #each["payload"]["release"]["id"],
                         each["public"],
                         each["created_at"],
                     )
@@ -165,46 +131,6 @@ def process(cur, conn, filepath):
                 """
                 cur.execute(insert_statement)
 
-                # Insert data into tables here
-                insert_statement = f"""
-                    INSERT INTO org (
-                        id,
-                        login
-                    ) VALUES ('{each["org"]["id"]}', '{each["org"]["login"]}')
-                    ON CONFLICT (id) DO NOTHING
-                """
-                cur.execute(insert_statement)
-
-                insert_statement_issue = f"""
-                    INSERT INTO issue (
-                        id,	
-                        url
-                    ) VALUES ('{each["payload"]["issue"]["id"]}','{each["payload"]["issue"]["url"]}')
-                    ON CONFLICT (id) DO NOTHING
-                """
-                cur.execute(insert_statement)
-
-                # Insert data into tables here
-                insert_statement = f"""
-                    INSERT INTO payload (
-                        action,
-                        issue_id,
-                        comment,
-                        commit_url,
-                        ref,
-                        ref_type,
-                        pusher_type
-                    ) VALUES (
-                        '{each["payload"]["action"]}',
-                        '{each["payload"]["issue"]["id"]}',
-                        '{each["payload"]["comment"]["id"]}',
-                        '{each["payload"].get("commits", {}).get("url", "")}',
-                        '{each["payload"].get("ref", "")}',
-                        '{each["payload"].get("ref_type", "")}',
-                        '{each["payload"].get("pusher_type", "")}'
-                    )
-                """
-                cur.execute(insert_statement)
 
                 # Insert data into tables here
                 insert_statement = f"""
@@ -213,11 +139,9 @@ def process(cur, conn, filepath):
                         type,
                         actor_id,
                         repo_id,
-                        payload,
                         public,
-                        created_at,
-                        org_id
-                    ) VALUES ('{each["id"]}', '{each["type"]}', '{each["actor"]["id"]}', '{each["repo"]["id"]}', '{each["payload"]["issue"]["url"]}', '{each["public"]}', '{each["created_at"]}', '{each["org"]["id"]}')
+                        created_at
+                    ) VALUES ('{each["id"]}', '{each["type"]}', '{each["actor"]["id"]}', '{each["repo"]["id"]}', '{each["public"]}', '{each["created_at"]}')
                     ON CONFLICT (id) DO NOTHING
                 """
                 cur.execute(insert_statement)
