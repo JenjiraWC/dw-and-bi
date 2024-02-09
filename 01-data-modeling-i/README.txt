@@ -1,13 +1,64 @@
-ความตั้งใจแรกอยากจะสร้าง table ประมาณนี้เพื่อแสดงความสัมพันธ์ของข้อมูล
+ใน Folder 01-data-modeling-i ประกอบด้วย file
+1. create_tables.py
+2. docker-compose.yml
+3. etl.py
+4. README.txt
 
-create_table_queries =
-    table_create_actors,
-    table_create_repo,
-    table_create_users,
-    table_create_author,
-    table_create_release,
-    table_create_events,
-    table_create_payload
+ขั้นตอนการใช้งาน
+1. run docker-compose up ใน Terminal 
+2. ดูที่ Ports ที่ Ports 8080 เลือก Open in browser
+3. System : PostgreSQL
+   Server : postgres	
+   db     : postgres
+   Username : postgres	
+   Password : postgres	
+   Database : postgres
+4. เลือก new Terminal แล้ว run python create_tables.py
+5. refresh adminar จะได้ table
+    actors
+        id bigint,
+        login text,
+        PRIMARY KEY(id)
 
-แต่พอมาทำในส่วนของ insert data ไม่สามารถ insert เข้าไปใน table ได้ สามารถใส่ได้แค่ table actor repo events ไม่เข้าใจเหมือนกันว่าโค้ดผิดตรงไหนค่ะ
-เนื่องจากไม่สันทัดการเขียน python ก็เลยปรับลด table กับ column ไปเรื่อยๆ เอาเท่าที่จะสามารถ insert ข้อมูลเข้าไปได้
+    repo
+        id bigint,
+        name text,
+        PRIMARY KEY(id)
+
+    users
+        id bigint,
+        login text,
+        url text,
+        type text,
+        site_admin text,
+        PRIMARY KEY(id)
+
+    author
+        id bigint,
+        login text,
+        type text,
+        PRIMARY KEY(id)
+
+    release
+        id bigint,
+        url text,
+        author_id bigint,
+        name text,
+        created_at text,
+        published_at text,
+        PRIMARY KEY(id),
+        CONSTRAINT fk_author_release FOREIGN KEY(author_id) REFERENCES author(id)
+    
+    events
+        id bigint,
+        type text,
+        actor_id bigint,
+        repo_id bigint,
+        public text,
+        created_at text,
+        payload text,
+        PRIMARY KEY(id),
+        CONSTRAINT fk_actor FOREIGN KEY(actor_id) REFERENCES actors(id),
+        CONSTRAINT fk_repo FOREIGN KEY(repo_id) REFERENCES repo(id)
+
+6. แล้ว run python etl.py เพื่อ insert ข้อมูล json จาก folder data เข้าไปใน table 
