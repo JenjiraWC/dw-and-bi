@@ -80,34 +80,6 @@ def process(session, filepath):
                 # Insert data into tables here
 
 
-def insert_data(data,session):
-    query = """
-    INSERT INTO events 
-    (
-        id,
-        type,
-        actor_id,
-        repo_id,
-        payload,
-        public,
-        created_at,
-        org_id
-    )
-    VALUES 
-    (
-        '{data["id"]}',
-        '{data["type"]}', 
-        '{data["actor"]["id"]'},
-        '{data["repo"]["id"]}',
-        '{data["payload"]["action"]}',
-        '{data["public"]}',
-        '{data["created_at"]}',
-        '{data["org"]["id"]}'
-    )
-    """
-
-    session.execute(query)
-
 def insert_sample_data(session):
     query = """
     INSERT INTO events (id, type, actor_id, repo_id, payload, public, created_at, org)
