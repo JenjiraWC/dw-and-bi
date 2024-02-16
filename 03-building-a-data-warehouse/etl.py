@@ -11,18 +11,22 @@ create_table_queries = [
         type text,
         actor text,
         repo text,
+        payload text,
+        public text,
         created_at text
     )
     """,
     """
     CREATE TABLE IF NOT EXISTS events (
-        id int
+        id int,
+        type text,
+        created_at text
     )
     """,
 ]
 copy_table_queries = [
     """
-    COPY staging_events FROM 's3://jenjira-swu-labs/github_events_01 (1).json'
+    COPY staging_events FROM 's3://jenjira-swu-labs/github_events_01.json'
     CREDENTIALS 'aws_iam_role=arn:aws:iam::851725509891:role/LabRole'
     JSON 's3://jenjira-swu-labs/events_json_path.json'
     REGION 'us-east-1'
@@ -32,10 +36,14 @@ insert_table_queries = [
     """
     INSERT INTO
       events (
-        id
+        id,
+        type,
+        created_at
       )
     SELECT
       DISTINCT id,
+      type,
+      created_at
     FROM
       staging_events
     WHERE
