@@ -21,8 +21,10 @@
 python -m venv ENV
 source ENV/bin/activate
 pip install -r requirements.txt
-```
+
 เพื่อ install และ activate requirements.txt
+```
+
 
 2. ตรวจสอบ file etl.py ว่า path และ region ตรงกับ path และ region ใน AWS
     COPY staging_events FROM 's3://jenjira-swu-labs/github_events_01.json'
