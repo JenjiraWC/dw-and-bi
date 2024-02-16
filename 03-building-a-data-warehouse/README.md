@@ -27,10 +27,12 @@ pip install -r requirements.txt
 
 
 2. ตรวจสอบ file etl.py ว่า path และ region ตรงกับ path และ region ใน AWS
+```sh
     COPY staging_events FROM 's3://jenjira-swu-labs/github_events_01.json'
     CREDENTIALS 'aws_iam_role=arn:aws:iam::851725509891:role/LabRole'
     JSON 's3://jenjira-swu-labs/events_json_path.json'
     REGION 'us-east-1'
+```
 
 3. run file etl.py 
 ```sh
