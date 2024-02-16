@@ -11,8 +11,6 @@ create_table_queries = [
         type text,
         actor text,
         repo text,
-        payload text,
-        public text,
         created_at text
     )
     """,
