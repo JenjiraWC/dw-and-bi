@@ -58,6 +58,7 @@ def main(dataset_id, table_id, file_path):
             bigquery.SchemaField("id", bigquery.SqlTypeNames.STRING),
             bigquery.SchemaField("type", bigquery.SqlTypeNames.STRING),
             bigquery.SchemaField("actor", bigquery.SqlTypeNames.STRING),
+            bigquery.SchemaField("repo", bigquery.SqlTypeNames.STRING),
         ],
     )
 
@@ -83,6 +84,7 @@ if __name__ == "__main__":
             "id",
             "type",
             "login",
+            "repo",
         ])
 
         for datafile in all_files:
@@ -93,6 +95,7 @@ if __name__ == "__main__":
                         each["id"], 
                         each["type"],
                         each["actor"]["login"],
+                        each["repo"]["name"],
                     ])
 
     main(dataset_id="github",table_id="events" , file_path="github_events.csv")
