@@ -1,5 +1,5 @@
 # 04-Building a Data Lake
-## folder นี้ประกอบด้วย 5 file
+## folder นี้ประกอบด้วย 15 file
 
 1. .ipynb_checkpoints
 2. actors
@@ -43,12 +43,13 @@ docker-compose up
    
 
    โดยข้อมูลจาก folder data file github_events_01.json และ github_events_02.json จะถูกดึงไปอยู่ในรูปแบบตารางที่ folder 
-
+```sh
    actors ได้ file ประกอบด้วยข้อมูล
     actor.login
     id as event_id
     actor.url as actor_url
-   
+```
+```sh  
    events ได้ folder: date=2022-08-17 และ file ประกอบด้วยข้อมูล
     id
     type
@@ -57,12 +58,14 @@ docker-compose up
     month(created_at) as month
     year(created_at) as year
     date(created_at) as date
-   
+```
+```sh 
    repos ได้ file ประกอบด้วยข้อมูล
     repo.name
     id as event_id
     repo.url as repo_url
-   
+```
+```sh   
    output_csv และ output_parquet folder: year=2022 ได้ file ประกอบด้วยข้อมูล
     id
     type
@@ -73,3 +76,4 @@ docker-compose up
     actor.url as actor_url
     repo.name
     repo.url as repo_url
+```
