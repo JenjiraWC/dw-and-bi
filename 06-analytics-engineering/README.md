@@ -1,9 +1,24 @@
 # 06-analytics-engineering
 ## folder นี้ประกอบด้วย
-1. dags มี folder data , file my_first_dag.py, hello.py, etl.py
-2. logs
-3. docker-compose.yml
-4. README.md
+1. ds525
+  1.1 model
+    1.1.1 example
+         - my_first_dbt_model.sql
+         - my_second_dbt_model.sql
+         - schema.yml
+    1.1.2 marts
+         - jaffle_shop_obt.sql
+    1.1.3 staging
+         - _src.yml
+         - stg__jaffle_shop_customers.sql
+         - stg__jaffle_shop_orders.sql
+  1.2 my_simple_model.sql
+2. dbt_project.yml
+3. profiles.yml
+4. logs
+5. scripts
+6. docker-compose.yml
+7. README.md
 
 ## ขั้นตอนการทำงาน
 
@@ -38,8 +53,10 @@ dbt init
 ```sh
 dbt debug
 ```
+
 10. run model ที่อยู่ใน folder ds525 โดยใช้คำสั่ง
 ```sh
 dbt run
 ```
+
 11. ดูที่หน้า SQLPad จะมี shchema ชื่อ dbt_jen ถูกสร้างขึ้นแล้วจะมีไฟล์ที่ถูกสร้างขึ้นตามคำสั่งใน model
