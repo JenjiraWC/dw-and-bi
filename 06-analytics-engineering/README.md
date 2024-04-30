@@ -1,18 +1,19 @@
 # 06-analytics-engineering
 ## folder นี้ประกอบด้วย
-1. ds525
-  1.1 model
-    1.1.1 example
-         - my_first_dbt_model.sql
-         - my_second_dbt_model.sql
-         - schema.yml
-    1.1.2 marts
-         - jaffle_shop_obt.sql
-    1.1.3 staging
-         - _src.yml
-         - stg__jaffle_shop_customers.sql
-         - stg__jaffle_shop_orders.sql
-  1.2 my_simple_model.sql
+foder ds525 ซึ่งมี
+1. folder model
+- example
+    - my_first_dbt_model.sql
+    - my_second_dbt_model.sql
+    - schema.yml
+- marts
+    - jaffle_shop_obt.sql
+- staging
+    - _src.yml
+    - stg__jaffle_shop_customers.sql
+    - stg__jaffle_shop_orders.sql
+- file my_simple_model.sql
+
 2. dbt_project.yml
 3. profiles.yml
 4. logs
