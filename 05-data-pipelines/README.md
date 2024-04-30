@@ -1,11 +1,9 @@
 # 05-data-pipeline
 ## folder นี้ประกอบด้วย
-1. config
-2. dags มี folder data , file my_first_dag.py, hello.py, etl.py
-3. logs
-4. plugins
-5. docker-compose.yml
-6. README.md
+1. dags มี folder data , file my_first_dag.py, hello.py, etl.py
+2. logs
+3. docker-compose.yml
+4. README.md
 
 ## ขั้นตอนการทำงาน
 
