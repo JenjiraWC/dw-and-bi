@@ -28,6 +28,26 @@ foder ds525 ซึ่งมี
 1. สร้าง new project
 ![alt text](<Screenshot 2024-05-06 165009.png>)
 
+3. สร้าง new database
+![alt text](<Screenshot 2024-05-06 170344.png>)
+
+2. copy url ของ Postgres
+![alt text](<Screenshot 2024-05-06 165501.png>)
+
+### google colab
+1. download file load.ipynb สามารถใช้งานผ่าน google colab
+2. นำ url ที่ copy มาจาก neon ไปแทนที่ตรง connection_string เพื่อ connect กับ database ใน neon
+![alt text](<Screenshot 2024-05-06 170120.png>)
+
+3. run code เพื่อ create table
+![alt text](image-2.png)
+
+4. download file rainfall.csv แล้ว run code ต่อเพื่อ read file ,ทำความสะอาดข้อมูล และนำข้อมูลเข้าไปเก็บใน database posstgres neon 
+![alt text](image-3.png)
+
+5. โดยข้อมูลจาก file rainfall.csv ที่นำไปเก็บไว้ใน neon มีดังนี้
+![alt text](image-6.png)
+
 1. เปิด terminal run
 
 ```sh
