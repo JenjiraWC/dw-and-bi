@@ -1,11 +1,11 @@
 # capstone project rainfall
 
 ## folder นี้ประกอบด้วย
-1. dags >> ETL_Postgres_to_Bigquery.py
+1. dags >> ETL_Postgres_to_Bigquery.py : code การทำงานใน airflow
 2. docker-compose.yml
-3. load.ipynb
+3. load.ipynb : code นำข้อมูลจากไฟล์ csv เข้า neoo Postgres
 4. requirements.txt
-5. agriculture_cond_sql.sql
+5. agriculture_cond_sql.sql : code SQL insert ข้อมูลเงื่อนไขปริมาณน้ำฝนที่เหมาะสมกับการปลูกพืชเศรษฐกิจเข้าใน Bigquery
 6. README.md
 
 ## ขั้นตอนการทำงาน
@@ -63,7 +63,8 @@ Google BigQuery เป็น Serverless Data Warehouse หนึ่งในบ�
 
 
 ### Github
-1. ปรับแก้ไฟล์ ETL_Postgres_to_Bigquery.py โดยสามารถ find 'change' ได้ว่าจุดไหนที่ต้องปรับแก้
+1. ปรับแก้ไฟล์ ETL_Postgres_to_Bigquery.py โดยสามารถ ctrl+F 'changes' ได้ว่าจุดไหนที่ต้องปรับแก้
+
 - แก้ dbname, user, password, host เพื่อเชื่อมต่อกับฐานข้อมูล Neon Postgres
 ![alt text](<Screenshot 2024-05-06 185949.png>)
 ![alt text](<Screenshot 2024-05-06 190724.png>)
@@ -71,6 +72,9 @@ Google BigQuery เป็น Serverless Data Warehouse หนึ่งในบ�
 -  แก้ keyfile และ project_id
 ![alt text](<Screenshot 2024-05-06 191916.png>)
 ![alt text](<Screenshot 2024-05-06 192402-1.png>)
+
+- แก้ dataset_id ให้ตรงกับชื่อ dataset ใน BigQuery ทุกจุดสามารถ ctrl+F 'changes dataset_id' ได้
+![alt text](<Screenshot 2024-05-07 221853.png>)
 
 2. เปิด terminal run
 
@@ -83,13 +87,25 @@ docker-compose up
 ### Airflow
 1. set connection neon และ Bigquery ที่ tab admin >> connection กด + 
 - add connection neon
-
+![alt text](<Screenshot 2024-05-07 222449.png>)
 - add connection BigQuery
+![alt text](<Screenshot 2024-05-07 222859.png>)
 
-2. run ETL_Postgres_to_Bigquery ในหน้า UI Airflow
+ถ้ากด save แล้วขึ้นว่า page can't be found ให้ลบ :8080 ออกแล้ว refresh
+![alt text](<Screenshot 2024-05-07 200524.png>)
+![alt text](<Screenshot 2024-05-07 200847.png>)
 
-3. ตรวจสอบข้อมูลที่ BigQuery
+2. แก้ postgres_conn_id="neon" ได้มาจากการเพิ่ม connection neon ใน UI Airflow tab Admin >> connection
+![alt text](<Screenshot 2024-05-07 212956.png>)
 
+3. run ETL_Postgres_to_Bigquery ในหน้า UI Airflow
+![alt text](<Screenshot 2024-05-07 223127.png>)
+
+4. จะได้ไฟล์ rainfall.csv กับ province.csv เข้ามาอยู่ใน dags เพื่อที่จะเอาข้อมูลจากตรงนี้ไปเข้าใน BigQuery
+![alt text](<Screenshot 2024-05-07 223439.png>)
+
+3. ตรวจสอบข้อมูลที่ BigQuery จะมี table rainfall และ province เพิ่มขึ้นมา
+![alt text](<Screenshot 2024-05-07 224739.png>)
 
 ### Power BI
 ในการทำ Visualize ของ project นี้ใช้ Power BI เพราะมี tools ให้เลือกใช้หลากหลาย ยืดหยุ่นและปรับแต่งได้ตามต้องการ มีผู้ใช้งานอย่างกว้างขวางสามารถเรียนรู้ตามได้ง่าย และสามารถ connect ข้อมูลได้จากหลายช่องทาง

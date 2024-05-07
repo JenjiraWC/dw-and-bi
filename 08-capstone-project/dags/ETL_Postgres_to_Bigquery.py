@@ -19,15 +19,15 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.utils import timezone
 # from datetime import datetime
-from datetime import timedelta     #เพื่เอาไปใช้ในการคำนวณเกี่ยวกับเวลาและวันที่ได้ 
+from datetime import timedelta     #เพื่อเอาไปใช้ในการคำนวณเกี่ยวกับเวลาและวันที่ได้ 
 from typing import List      #เพื่อให้เราสามารถประกาศชนิดข้อมูลของตัวแปรเป็น List ได้
 
 
 
-
+# changes postgres_conn_id="conn id" ได้มาจากการเพิ่ม connection ใน UI Airflow tab Admin >> connection
 
 def _create_tables():
-    hook = PostgresHook(postgres_conn_id="neon_conn")  #ใช้ PostgresHook เพื่อเชื่อมต่อกับฐานข้อมูล PostgreSQL
+    hook = PostgresHook(postgres_conn_id="neon")  #ใช้ PostgresHook เพื่อเชื่อมต่อกับฐานข้อมูล PostgreSQL 
     conn = hook.get_conn()
     cur = conn.cursor()
 
@@ -46,9 +46,9 @@ def _neon_to_rainfall_csv():
     # เชื่อมต่อกับฐานข้อมูล Neon Postgres
     conn = psycopg2.connect(
         dbname="rainfall",
-        user="rainfall_owner",
-        password="n74hGCTiJIYH",
-        host="ep-spring-truth-a1owr4u7.ap-southeast-1.aws.neon.tech",
+        user="neondb_owner",
+        password="R5P4gSlKJMsv",
+        host="ep-little-waterfall-a1xxtyca.ap-southeast-1.aws.neon.tech",
         port="5432"
     )
 
@@ -64,7 +64,7 @@ def _neon_to_rainfall_csv():
     # ดึงข้อมูลทั้งหมด
     rows = cur.fetchall()
 
-# เขียนข้อมูลลงในไฟล์ CSV
+# เขียนข้อมูล rainfall ลงในไฟล์ CSV 
     with open('/opt/airflow/dags/rainfall.csv', 'w') as csv_file_rainfall:
         writer = csv.writer(csv_file_rainfall)
         writer.writerow([i[0] for i in cur.description])  # เขียนหัว column
@@ -81,9 +81,9 @@ def _neon_to_province_csv():
 # changes host
     conn = psycopg2.connect(
         dbname="rainfall",
-        user="rainfall_owner",
-        password="n74hGCTiJIYH",
-        host="ep-spring-truth-a1owr4u7.ap-southeast-1.aws.neon.tech",
+        user="neondb_owner",
+        password="R5P4gSlKJMsv",
+        host="ep-little-waterfall-a1xxtyca.ap-southeast-1.aws.neon.tech",
         port="5432"
     )
     
@@ -99,7 +99,7 @@ def _neon_to_province_csv():
     # ดึงข้อมูลทั้งหมด
     rows = cur.fetchall()
 
-# เขียนข้อมูลลงในไฟล์ CSV
+# เขียนข้อมูล province ลงในไฟล์ CSV
     with open('/opt/airflow/dags/province.csv', 'w') as csv_file_province:
         writer = csv.writer(csv_file_province)
         writer.writerow([i[0] for i in cur.description])  # เขียนหัว column
@@ -107,7 +107,7 @@ def _neon_to_province_csv():
 
 
 
-def _get_files(filepath="/opt/airflow/dags"):
+def _get_files(filepath="/opt/airflow/dags/"):
 
 # def _get_files(filepath: str = "/opt/airflow/dags") -> List[str]:
 #     """
@@ -141,7 +141,7 @@ def _main_rainfall(dataset_id, table_id, file_path):
 
 # changes keyfile
     # แต่เพื่อความง่ายเราสามารถกำหนด File Path ไปได้เลยตรง ๆ
-    keyfile = "/opt/airflow/dags/project-pipeline-ds525-neon-to-bigquery-26d2169ea978.json"
+    keyfile = "/opt/airflow/dags/rare-palace-422511-m8-30e259b62a4b.json"
     service_account_info = json.load(open(keyfile))
     credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
@@ -149,7 +149,7 @@ def _main_rainfall(dataset_id, table_id, file_path):
     # สร้างจากโค้ดข้างต้น
 
 # changes project_id
-    project_id = "project-pipeline-ds525"
+    project_id = "rare-palace-422511-m8"
     client = bigquery.Client(
         project=project_id,
         credentials=credentials,
@@ -195,16 +195,16 @@ def _main_rainfall(dataset_id, table_id, file_path):
     print(f"Loaded {table.num_rows} rows and {len(table.schema)} columns to {table_id}")
 
 if __name__ == "__main__":             #เป็นการตรวจสอบว่าโมดูลถูกเรียกใช้โดยตรงหรือป่าว โดยจะกำหนดค่า __name__ เป็น "__main__" เมื่อโมดูลถูกเรียกใช้โดยตรง และในกรณีนี้คำสั่งที่อยู่ในบล็อก main
-    all_files = get_files(filepath="/opt/airflow/dags")
+    all_files = get_files(filepath="/opt/airflow/dags/")
     print(all_files)
 
-    dataset_id = "rainfall_Bigquery"
+    dataset_id = "rainfalltest"
     table_id = "rainfall"
     file_path = "rainfall.csv"
 
     # main(dataset_id, table_id, file_path)
 
-
+    
     with open("/opt/airflow/dags/rainfall.csv", "w") as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow([
@@ -235,7 +235,7 @@ if __name__ == "__main__":             #เป็นการตรวจสอ�
                         each["date"],
                     ])
 
-    main(dataset_id="rainfall_Bigquery", table_id="rainfall", file_path="rainfall.csv")
+    main(dataset_id="rainfalltest", table_id="rainfall", file_path="rainfall.csv")
 
 
 
@@ -252,7 +252,7 @@ def _main_province(dataset_id, table_id, file_path):
 
 # changes keyfile
     # แต่เพื่อความง่ายเราสามารถกำหนด File Path ไปได้เลยตรง ๆ
-    keyfile = "/opt/airflow/dags/project-pipeline-ds525-neon-to-bigquery-26d2169ea978.json"
+    keyfile = "/opt/airflow/dags/rare-palace-422511-m8-30e259b62a4b.json"
     service_account_info = json.load(open(keyfile))
     credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
@@ -260,7 +260,7 @@ def _main_province(dataset_id, table_id, file_path):
     # สร้างจากโค้ดข้างต้น
 
 # changes project_id
-    project_id = "project-pipeline-ds525"
+    project_id = "rare-palace-422511-m8"
     client = bigquery.Client(
         project=project_id,
         credentials=credentials,
@@ -303,13 +303,13 @@ if __name__ == "__main__":
     all_files = get_files(filepath="/opt/airflow/dags")
     print(all_files)
 
-    dataset_id = "rainfall_Bigquery"
+    dataset_id = "rainfalltest" #changes dataset_id
     table_id = "province"
     file_path = "province.csv"
 
     # main(dataset_id, table_id, file_path)
 
-
+    
     with open("/opt/airflow/dags/rainfall.csv", "w") as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow([
@@ -328,7 +328,7 @@ if __name__ == "__main__":
                         each["province_name_en"],
                     ])
 
-    main(dataset_id="rainfall_Bigquery", table_id="province", file_path="province.csv")
+    main(dataset_id="rainfalltest", table_id="province", file_path="province.csv") # changes dataset_id
 
 
 
@@ -427,7 +427,7 @@ with DAG(
         task_id="csv_neon_to_rainfall_bq",
         python_callable=_main_rainfall,
         op_kwargs={
-        "dataset_id": "rainfall_Bigquery",
+        "dataset_id": "rainfalltest", # changes dataset_id
         "table_id": "rainfall",
         "file_path": "rainfall.csv"
     },
@@ -439,7 +439,7 @@ with DAG(
         task_id="csv_neon_to_province_bq",
         python_callable=_main_province,
         op_kwargs={
-        "dataset_id": "rainfall_Bigquery",
+        "dataset_id": "rainfalltest", # changes dataset_id
         "table_id": "province",
         "file_path": "province.csv"
     },
