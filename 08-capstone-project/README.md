@@ -10,7 +10,7 @@
 ## ขั้นตอนการทำงาน
 
 ### Neon
-project นี้จะนำ raw data ไปเก็บไว้ที่ database postgres ของ neon.tech ซึ่งเป็น serverless ที่สามารถทดลองใช้งานฟรีได้โดยขนาดของข้อมูลไม่เกิน 512 MiB storage, Limited to 0.25 vCPU, 1GB RAM
+project นี้จะนำ raw data ไปเก็บไว้ที่ database postgres ของ [Neon — Serverless, Fault-Tolerant, Branchable Postgres](https://neon.tech/) ซึ่งเป็น serverless ที่สามารถทดลองใช้งานฟรีได้โดยขนาดของข้อมูลไม่เกิน 512 MiB storage, Limited to 0.25 vCPU, 1GB RAM
 
 1. สร้าง new project
 ![alt text](<Screenshot 2024-05-06 165009.png>)
@@ -34,18 +34,20 @@ project นี้จะนำ raw data ไปเก็บไว้ที่ data
 ![alt text](<Screenshot 2024-05-06 171137.png>)
 
 5. โดยข้อมูลจาก file rainfall.csv ที่นำไปเก็บใน database มีรายละเอียดดังนี้
-![alt text](image.png)
+![alt text](<Screenshot 2024-05-06 211232.png>)
 
 6. ตรวจสอบว่าข้อมูลอยู่ใน database เรียบร้อย
 ![alt text](<Screenshot 2024-05-06 182801.png>)
 
 ### Google BigQuery
-Google BigQuery เป็น Serverless Data Warehouse หนึ่งในบริการของ Google cloud platform ค่าบริการเป็นแบบ Pay-per-use แต่มีให้ทดลองใช้ฟรี สามารถวิเคราห์และประมวลผลข้อมูลขนาดใหญ่ (ฺBig data) เพื่อหาผลลัพธ์ตามที่ต้องการได้อย่างมีประสิทธิภาพและรวดเร็ว โดยการใช้ SQL
+Google BigQuery เป็น Serverless Data Warehouse หนึ่งในบริการของ Google cloud platform ค่าบริการเป็นแบบ Pay-per-use แต่มีให้ทดลองใช้ฟรี สามารถวิเคราะห์และประมวลผลข้อมูลขนาดใหญ่ (ฺBig data) เพื่อหาผลลัพธ์ตามที่ต้องการได้อย่างมีประสิทธิภาพและรวดเร็ว โดยการใช้ SQL
 1. สร้าง new project
 2. สร้าง dataset เป็นเหมือนกล่องไว้เก็บ table
 ![alt text](<Screenshot 2024-05-06 184122.png>)
+
 3. Create service account ที่ IAM & Admin เพื่อสร้าง Key และกำหนด role
 ![alt text](<Screenshot 2024-05-06 184426.png>)
+
 4. เมื่อสร้างเสร็จ download file key ในรูปแบบ .json แล้ว upload ใน folder capstone project ใน github 
 ![alt text](<Screenshot 2024-05-06 185017.png>)
 
