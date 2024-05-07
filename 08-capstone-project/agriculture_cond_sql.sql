@@ -1,0 +1,2 @@
+/*changes datasetname.tablename*/
+insert into `rainfall_Bigquery.agriculture_cond` (`name`, `min_value`, `max_value`, `condition`) values ('ข้าว', 83, 166, 'min_value <= x <= max_value'), ('ข้าวโพดเลี้ยงสัตว์',41,50,'min_value <= x <= max_value'), ('ปาล์มน้ำมัน', 150,166,'min_value <= x <= max_value'), ('มันสำปะหลัง',83,250,'min_value <= x <= max_value'), ('ยางพารา',100,116,'min_value <= x <= max_value'), ('อ้อย',100,133,'min_value <= x <= max_value')
