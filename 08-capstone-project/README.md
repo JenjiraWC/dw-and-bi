@@ -69,6 +69,9 @@ docker-compose up
 
 ### Airflow
 1. set connection neon และ Bigquery ที่ tab admin >> connection กด + 
+- add connection neon
+
+- add connection BigQuery
 
 2. run ETL_Postgres_to_Bigquery ในหน้า UI Airflow
 
