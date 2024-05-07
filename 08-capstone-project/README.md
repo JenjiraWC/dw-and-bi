@@ -13,7 +13,7 @@
 project นี้จะนำ raw data ไปเก็บไว้ที่ database postgres ของ [Neon — Serverless, Fault-Tolerant, Branchable Postgres](https://neon.tech/) ซึ่งเป็น serverless ที่สามารถทดลองใช้งานฟรีได้โดยขนาดของข้อมูลไม่เกิน 512 MiB storage, Limited to 0.25 vCPU, 1GB RAM
 
 1. สร้าง new project
-![alt text](<Screenshot 2024-05-06 165009.png>)
+![alt text](<08-capstone-project/image/Screenshot 2024-05-06 165009.png>)
 
 3. สร้าง new database
 ![alt text](<Screenshot 2024-05-06 170344.png>)
