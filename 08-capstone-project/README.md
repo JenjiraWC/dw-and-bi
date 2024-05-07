@@ -59,7 +59,7 @@ Google BigQuery เป็น Serverless Data Warehouse หนึ่งในบ�
 
 -  แก้ keyfile และ project_id
 ![alt text](<Screenshot 2024-05-06 191916.png>)
-![alt text](<Screenshot 2024-05-06 192402.png>)
+![alt text](<Screenshot 2024-05-06 192402-1.png>)
 
 2. เปิด terminal run
 
