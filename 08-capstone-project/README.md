@@ -5,7 +5,8 @@
 2. docker-compose.yml
 3. load.ipynb
 4. requirements.txt
-7. README.md
+5. agriculture_cond_sql.sql
+6. README.md
 
 ## ขั้นตอนการทำงาน
 
