@@ -47,8 +47,8 @@ def _neon_to_rainfall_csv():
     conn = psycopg2.connect(
         dbname="rainfall",
         user="neondb_owner",
-        password="R5P4gSlKJMsv",
-        host="ep-little-waterfall-a1xxtyca.ap-southeast-1.aws.neon.tech",
+        password="password",
+        host="url",
         port="5432"
     )
 
@@ -82,8 +82,8 @@ def _neon_to_province_csv():
     conn = psycopg2.connect(
         dbname="rainfall",
         user="neondb_owner",
-        password="R5P4gSlKJMsv",
-        host="ep-little-waterfall-a1xxtyca.ap-southeast-1.aws.neon.tech",
+        password="password",
+        host="url",
         port="5432"
     )
     
@@ -141,7 +141,7 @@ def _main_rainfall(dataset_id, table_id, file_path):
 
 # changes keyfile
     # แต่เพื่อความง่ายเราสามารถกำหนด File Path ไปได้เลยตรง ๆ
-    keyfile = "/opt/airflow/dags/rare-palace-422511-m8-30e259b62a4b.json"
+    keyfile = "/opt/airflow/dags/keyfile.json"
     service_account_info = json.load(open(keyfile))
     credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
@@ -149,7 +149,7 @@ def _main_rainfall(dataset_id, table_id, file_path):
     # สร้างจากโค้ดข้างต้น
 
 # changes project_id
-    project_id = "rare-palace-422511-m8"
+    project_id = "project_id"
     client = bigquery.Client(
         project=project_id,
         credentials=credentials,
@@ -252,7 +252,7 @@ def _main_province(dataset_id, table_id, file_path):
 
 # changes keyfile
     # แต่เพื่อความง่ายเราสามารถกำหนด File Path ไปได้เลยตรง ๆ
-    keyfile = "/opt/airflow/dags/rare-palace-422511-m8-30e259b62a4b.json"
+    keyfile = "/opt/airflow/dags/keyfile.json"
     service_account_info = json.load(open(keyfile))
     credentials = service_account.Credentials.from_service_account_info(service_account_info)
 
@@ -260,7 +260,7 @@ def _main_province(dataset_id, table_id, file_path):
     # สร้างจากโค้ดข้างต้น
 
 # changes project_id
-    project_id = "rare-palace-422511-m8"
+    project_id = "project_id"
     client = bigquery.Client(
         project=project_id,
         credentials=credentials,
@@ -303,7 +303,7 @@ if __name__ == "__main__":
     all_files = get_files(filepath="/opt/airflow/dags")
     print(all_files)
 
-    dataset_id = "rainfalltest" #changes dataset_id
+    dataset_id = "dataset_id" #changes dataset_id
     table_id = "province"
     file_path = "province.csv"
 
@@ -328,7 +328,7 @@ if __name__ == "__main__":
                         each["province_name_en"],
                     ])
 
-    main(dataset_id="rainfalltest", table_id="province", file_path="province.csv") # changes dataset_id
+    main(dataset_id="dataset_id", table_id="province", file_path="province.csv") # changes dataset_id
 
 
 
@@ -427,7 +427,7 @@ with DAG(
         task_id="csv_neon_to_rainfall_bq",
         python_callable=_main_rainfall,
         op_kwargs={
-        "dataset_id": "rainfalltest", # changes dataset_id
+        "dataset_id": "dataset_id", # changes dataset_id
         "table_id": "rainfall",
         "file_path": "rainfall.csv"
     },
@@ -439,7 +439,7 @@ with DAG(
         task_id="csv_neon_to_province_bq",
         python_callable=_main_province,
         op_kwargs={
-        "dataset_id": "rainfalltest", # changes dataset_id
+        "dataset_id": "dataset_id", # changes dataset_id
         "table_id": "province",
         "file_path": "province.csv"
     },
