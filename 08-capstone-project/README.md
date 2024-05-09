@@ -130,7 +130,7 @@ docker-compose up
 ### Airflow
 1. set connection neon และ Bigquery ที่ tab admin >> connection กด + 
 - add connection neon
-![alt text](<Screenshot 2024-05-07 222449.png>)
+![alt text](<image/Screenshot 2024-05-07 222449.png>)
 - add connection BigQuery
 ![alt text](<Screenshot 2024-05-07 222859.png>)
 
