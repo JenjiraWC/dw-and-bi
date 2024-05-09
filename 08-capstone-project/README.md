@@ -39,6 +39,7 @@ https://digi.data.go.th/showcase/thailand-rainfall-data/
 4. requirements.txt
 5. agriculture_cond_sql.sql : code SQL insert ข้อมูลเงื่อนไขปริมาณน้ำฝนที่เหมาะสมกับการปลูกพืชเศรษฐกิจเข้าใน Bigquery
 6. Rainfall_bi.pbix : Dashboard Power BI
+7. rainfall.csv : ข้อมูลปริมาณน้ำฝนจาก https://digi.data.go.th/showcase/thailand-rainfall-data/
 7. README.md
 
 ## ขั้นตอนการทำงาน
