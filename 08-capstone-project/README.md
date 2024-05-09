@@ -27,9 +27,18 @@ https://digi.data.go.th/showcase/thailand-rainfall-data/
 - อ้อย ต้องการน้ำประมาณ 100 – 133 มม/เดือน
 
 ### Data modeling
-![alt text](<Screenshot 2024-05-09 092832.png>)
 
+ข้อมูลที่มาใช้วิเคราะห์คือข้อมูล
+1. rainfall.csv ที่จะนำมาแตกออกเป็น 2 table คือ
+- Rainfall.csv : ข้อมูลปริมาณน้ำฝนต่ำสุด สูงสุด และเฉลี่ย ในแต่ละจังหวัดรายเดือน ตั้งแต่ปี พ.ศ. 2561 – 2565
+- Province.csv : ข้อมูลรหัสจังหวัด และชื่อจังหวัดทั้งประเทศไทย มี province_id เป็น primary key
+ทั้ง 2 table เชื่อมกันด้วย province_id
+2. ตาราง condition เกณฑ์ความเหมาะสมของปริมาณน้ำฝนในการปลูกพืชเศรษฐกิจ
+![alt text](<Screenshot 2024-05-09 092832.png>)
+![alt text](<Screenshot 2024-05-09 094138.png>)
 ### Workflow Orchestration
+
+project นี้มีการทำงานหลักอยู่ 5 ส่วน คือ neon.hect, Google Colab, Google BigQuery, Airflow และ Power BI 
 ![alt text](<Screenshot 2024-05-09 093536.png>)
 
 ## folder นี้ประกอบด้วย
@@ -142,7 +151,13 @@ docker-compose up
 
 ### Power BI
 ในการทำ Visualize ของ project นี้ใช้ Power BI เพราะมี tools ให้เลือกใช้หลากหลาย ยืดหยุ่นและปรับแต่งได้ตามต้องการ มีผู้ใช้งานอย่างกว้างขวางสามารถเรียนรู้ตามได้ง่าย และสามารถ connect ข้อมูลได้จากหลายช่องทาง
-1. ดึงข้อมูลจาก BigQuery เข้ามาใน Power BI เพื่อดู Visualize dashboard 
+1. เปิดไฟล์ Rainfall_bi.pbix บน Power BI Desktop
+2. กด Get data เลือก Google BigQuery แล้วใส่ Project Id ที่ต้องการเชื่อมต่อ
+![alt text](<Screenshot 2024-05-09 102442.png>)
 
+3. กด Tranform data เลือกชั้นข้อมูล rainfall แล้วกด navigation เลือกชั้นข้อมูล rainfall ที่อยู่ใน Project Id ที่ได้ทำการเชื่อมต่อไว้
+![alt text](<Screenshot 2024-05-09 102654.png>)
 
-2. 
+4. กด refresh
+![alt text](image-1.png)
+![alt text](image-2.png)
